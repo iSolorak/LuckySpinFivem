@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script
+      type="text/javascript"
+      src="http://code.jquery.com/jquery-1.11.3.min.js"
+    ></script>
+    <script type="text/javascript" src="jquery-ui.min.js"></script>
+    <script type="text/javascript" src="src/rouletteWheel.js"></script>
+    <link rel="stylesheet" href="style.css" />
+    <script type="text/javascript">
+      $(function () {
+        //var itemsToShow = parseInt(4 + Math.random() * 10);
+        var itemsToShow = 11;
+        var displayyy = false;
+        console.log(itemsToShow);
+        var items = {};
+        for (var i = 0; i < itemsToShow; i++) {
+          items[i] = "ITEM " + (i + 1);
+        }
+        function display(bool) {
+          if (bool) {
+            $("#canvas").show();
+            $(".close").show();
+            displayyy = true;
+          } else {
+            $("#canvas").hide();
+            $(".close").hide();
+            displayyy = false;
+          }
+        }
+
+        display(false);
+        window.addEventListener("message", function (event) {
+          var item = event.data;
+          if (item.type === "ui") {
+            if (item.status == true) {
+              display(true);
+            } else {
+              display(false);
+            }
+          }
+        });
+        $(".close").click(function () {
+          $.post("http://nui4/exit", JSON.stringify({}));
+
+          return;
+        });
+
+        $("#canvas").rouletteWheel({
+          items: items,
+          selected: function (key, value) {
+            //alert("SELECTED : " + key + " => " + value);
+            if (displayyy) {
+              $.post(
+                "http://nui4/main",
+
+                JSON.stringify({
+                  text: value,
+                })
+              );
+            }
+            return;
+          },
+          spinText: "Click Me",
+        });
+      });
+    </script>
+    <title></title>
+  </head>
+  <body>
+    <canvas id="canvas" width="500" height="500"></canvas>
+    <button class="close">&times;</button>
+  </body>
+</html>

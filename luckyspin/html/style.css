@@ -1,0 +1,11 @@
+.close {
+  font-size: 30px;
+  font-weight: bold;
+  color: #000;
+}
+
+body {
+  max-width: max-content;
+  margin: auto;
+  justify-content: center;
+}
